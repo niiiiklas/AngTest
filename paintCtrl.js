@@ -39,8 +39,6 @@ app.controller('paintCtrl', ['$scope', '$interval',
                     rngNum : "---", //Math.random(),
                     bg : GetRandomColor()
                 };
-                
-                
             }
         }
     }
