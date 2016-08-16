@@ -2,10 +2,15 @@
 <html>
 
 <head>
-
+<script src="bower_components/angular/angular.js"></script>    
+<script src="appMod.js"></script>
+<script src="paintCtrl.js"> </script>
 </head>
 
-<body>
+<body ng-app="AppMod">
 
+<div ng-controller="paintCtrl">
+    <h1> Hej {{test}} </h1>
+</div>
 </body>
 </html>
