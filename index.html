@@ -7,10 +7,26 @@
 <script src="paintCtrl.js"> </script>
 </head>
 
-<body ng-app="AppMod">
+<body ng-app="AppMod" ng-controller="paintCtrl">
 
-<div ng-controller="paintCtrl">
+<div >
     <h1> Hej {{test}} </h1>
 </div>
+
+<table>
+    <tr ng-repeat="row in testtable">
+        <td ng-repeat="cell in row">
+            {{cell}}
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr ng-repeat="row in celldata">
+        <td ng-repeat="cell in row">
+            <span ng-style="cell.bg">{{ cell.rngNum }}</span>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
