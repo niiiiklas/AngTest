@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="bower_components/angular/angular.js"></script>    
+<script src="appMod.js"></script>
+<script src="paintCtrl.js"> </script>
+</head>
+
+<body ng-app="AppMod" ng-controller="paintCtrl">
+
+<div >
+    <h1> Hej {{test}} </h1>
+</div>
+
+<table>
+    <tr ng-repeat="row in testtable">
+        <td ng-repeat="cell in row">
+            {{cell}}
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr ng-repeat="row in celldata">
+        <td ng-repeat="cell in row">
+            <span ng-style="cell.bg">{{ cell.rngNum }}</span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
