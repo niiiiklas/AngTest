@@ -1,1 +1,22 @@
 <h2>The main snippet site stuff</h2>
+
+<div class="row">
+    <div class="col-md-4" 
+        style="background-color:#cacaca; min-height:300px"
+        ng-controller="selectorCtrl">
+
+        <script type="text/ng-template" id="tempTest">
+            {{ item.title}}
+            <ul ng-if="item.items">
+                <li ng-if="item.icontype == 0" class="selectorilistitem glyphicon glyphicon-folder-open" ng-repeat="item in item.items" ng-include="'tempTest'"></li>
+                <li ng-if="item.icontype == 1"  class="selectorilistitem glyphicon glyphicon-file" ng-repeat="item in item.items" ng-include="'tempTest'"></li>
+            </ul>
+        </script>
+        <ul>
+            <li class="selectorilistitem glyphicon glyphicon-folder-open" ng-repeat="item in items" ng-include="'tempTest'"></li>
+        </ul>
+    </div>
+    <div class="col-md-8">
+        dsds
+    </div>
+</div>

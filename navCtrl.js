@@ -36,5 +36,9 @@ function($scope, $interval){
         
         $scope.setpage(item.ref);
     }
+
+
+    //Debug start in snippets:
+    $scope.OnNavItemClick($scope.navoptions[1]);
 }]);
     
