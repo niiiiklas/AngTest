@@ -8,7 +8,7 @@ function($scope, $interval){
         },
         {
             key: 1,
-            content : "ingenting"
+            content : "<html>"
         },
         {
             key: 2,
@@ -32,14 +32,13 @@ function($scope, $interval){
         },
     ]
 
-
-    $scope.displaycontent = $scope.datasource[0].content;
+    $scope.displaycontent = $scope.datasource[0];
 
     $scope.displayContentKey = function(key){
         
         for(var i = 0; i < $scope.datasource.length; i++){
             if($scope.datasource[i].key === key){
-                $scope.displaycontent = $scope.datasource[i].content;
+                $scope.displaycontent = $scope.datasource[i];
             }
         }
     }
@@ -49,4 +48,10 @@ function($scope, $interval){
         console.log("showing what: " + key);
         $scope.displayContentKey(key);
     });
+
+    $scope.isInEditmode = false;
+
+    $scope.editbuttonclick = function(btn){
+        $scope.isInEditmode = !$scope.isInEditmode;
+    }
 }]);

@@ -1,0 +1,39 @@
+<div
+    style="background-color:#cacaca; min-height:300px"
+    ng-controller="selectorCtrl">
+    <div class="row form-group" style="padding: 5px 5px 5px 5px">
+        <div class="col-md-3">
+            <label style="margin-top:8px">Search</label>
+        </div>
+        <div class="col-md-9">
+            <input type="text" class="form-control input-sm" id="contentListSearch" />
+        </div>
+    </div>
+    <script type="text/ng-template" id="tempTest">
+        <span ng-if="currentItem == item" style="font-weight: bold">
+            {{ item.title }}
+        </span>
+        <span ng-if="currentItem != item"
+            ng-click="selectItem(item);">
+            {{ item.title}}
+        </span>
+        <span ng-if="item.icontype == 0">
+            <input type="button" value="+" class="btn btn-success btn-xs" ng-click="addNewItem(item);" />
+        </span>
+        <ul ng-if="item.items" class="selectorlist">
+            <li ng-if="item.icontype == 0" 
+                class="selectorilistitem glyphicon glyphicon-folder-open" 
+                ng-repeat="item in item.items" 
+                ng-include="'tempTest'"></li>
+            <li ng-if="item.icontype == 1"  
+                class="selectorilistitem glyphicon glyphicon-file" 
+                ng-repeat="item in item.items" 
+                ng-include="'tempTest'"></li>
+        </ul>
+    </script>
+    <ul style="padding-left:0px">
+        <li class="selectorilistitem glyphicon glyphicon-folder-open" 
+            ng-repeat="item in items" 
+            ng-include="'tempTest'"></li>
+    </ul>
+</div>

@@ -1,0 +1,24 @@
+<div class="defaultcontent" ng-controller="contentCtrl"
+    style="padding-left:10px; padding-right:10px">
+
+    <div class="row form-group">
+        <div class="col-md-3">
+            <label>Name</label>
+        </div>
+        <div class="col-md-9">
+            <input type="text" class="form-control" ng-model="displaycontent.key"></input>
+        </div>
+    </div>
+    <div class="row" style="margin-left:0px; margin-right:0px">
+        <input type="button" class="btn btn-success" value="Edit" style="float:right"
+            ng-click="editbuttonclick(this)">
+        
+        <div class="form-group">
+            <code ng-if="isInEditmode == false">
+                {{ displaycontent.content }}
+            </code>
+                
+            <textarea class="form-control" rows="10" type="text" ng-if="isInEditmode" ng-model="displaycontent.content" />
+        </div>
+    </div>
+</div>
