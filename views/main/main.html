@@ -1,22 +1,39 @@
 <h2>The main snippet site stuff</h2>
 
-<div class="row">
+<div class="row" ng-controller="mainCtrl">
     <div class="col-md-4" 
         style="background-color:#cacaca; min-height:300px"
         ng-controller="selectorCtrl">
 
         <script type="text/ng-template" id="tempTest">
-            {{ item.title}}
+            <span ng-if="currentItem == item" style="font-weight: bold">
+                {{ item.title }}
+            </span>
+            <span ng-if="currentItem != item"
+                ng-click="selectItem(item);">
+                {{ item.title}}
+            </span>
+            <span ng-if="item.icontype == 0">
+                <input type="button" value="+" class="btn btn-success" ng-click="addNewItem(item);" />
+            </span>
             <ul ng-if="item.items">
-                <li ng-if="item.icontype == 0" class="selectorilistitem glyphicon glyphicon-folder-open" ng-repeat="item in item.items" ng-include="'tempTest'"></li>
-                <li ng-if="item.icontype == 1"  class="selectorilistitem glyphicon glyphicon-file" ng-repeat="item in item.items" ng-include="'tempTest'"></li>
+                <li ng-if="item.icontype == 0" 
+                    class="selectorilistitem glyphicon glyphicon-folder-open" 
+                    ng-repeat="item in item.items" 
+                    ng-include="'tempTest'"></li>
+                <li ng-if="item.icontype == 1"  
+                    class="selectorilistitem glyphicon glyphicon-file" 
+                    ng-repeat="item in item.items" 
+                    ng-include="'tempTest'"></li>
             </ul>
         </script>
         <ul>
-            <li class="selectorilistitem glyphicon glyphicon-folder-open" ng-repeat="item in items" ng-include="'tempTest'"></li>
+            <li class="selectorilistitem glyphicon glyphicon-folder-open" 
+                ng-repeat="item in items" 
+                ng-include="'tempTest'"></li>
         </ul>
     </div>
-    <div class="col-md-8">
-        dsds
+    <div class="col-md-8 defaultcontent" ng-controller="contentCtrl">
+        {{ displaycontent }}
     </div>
 </div>
