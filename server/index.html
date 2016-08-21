@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" href="..//bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href ="..//bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <script src="..//bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="../bower_components/angular/angular.js"></script>
+
+    <!-- My stuff -->
+    <script src="appMod.js"></script>
+    <script src="dbtestCtrl.js"> </script>
+    
+</head>
+<body ng-app="AppMod" ng-controller="dbtestCtrl">
+    <div class="container">
+        <h4>Database tester</h4>
+        <div class="row">
+            <div class="col-md-4">
+                {{ test }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div = class="col-md-4">
+                <input type="text" value="1" ng-model="snippetbyid">
+                <input type="button" ng-click="getSnippetById();" value="GET SNIPPET">
+            </div>
+
+            <div class="col-md-8">
+                {{ snippetbyidres }}
+            </div>
+        </div>
+        
+        <br /> <br /> <br />
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label for="postsnippettitle">Title</label>
+                <input type="text" ng-model="postsnippet.title" id="postsnippettitle" />
+                <br />
+                <label for="postsnipetcontent">Content</label>
+                <input type="text" ng-model="postsnippet.content" id="postsnippetcontent" />
+                <br />
+                <input type="button" ng-click="postSnippet();" value="POST SNIPPET">
+            </div>
+
+            <div class="col-md-8">
+                {{ postsnippet}}
+
+                <br />
+
+                {{ postsnippetres }}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
