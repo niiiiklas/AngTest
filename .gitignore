@@ -2,3 +2,5 @@
 bower_components/*
 server/node_modules/*
 server/test.db
+backend/node_modules/*
+backend/test.db

@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser')
 
 var fs = require("fs");
 
@@ -14,17 +15,22 @@ db.serialize(function (){
         db.run("CREATE TABLE Workspaces (id INTEGER PRIMARY KEY AUTOINCREMENT, content text)");
 
         //Snippet
-        db.run("CREATE TABLE Snippets (id INTEGER PRIMARY KEY AUTOINCREMENT, title varchar, content text)");
+        db.run("CREATE TABLE Snippets (id INTEGER PRIMARY KEY AUTOINCREMENT, workspaceid INTEGER, title varchar, content text, FOREIGN KEY(workspaceid) REFERENCES Workspaces(id))");
     }
 
 //INITIAL ADDING OF TEST VALUES: ----
-    var contentTest = {
-        
-    };
-    var stmt = db.prepare("INSERT INTO Snippets (title, content) VALUES(?,?)");
-    stmt.run("Test1", "Allting");
-    stmt.finalize();
+    var doAddTestValues = false;
+
+    if(doAddTestValues){
+        var contentTest = {
+            
+        };
+        var stmt = db.prepare("INSERT INTO Snippets (title, content) VALUES(?,?)");
+        stmt.run("Test1", "Allting");
+        stmt.finalize();
+    }
 //---
+
 
 //Display info for current db:
     db.each("SELECT id, title, content FROM Snippets", function(err, row){
@@ -36,12 +42,16 @@ db.serialize(function (){
 //db.close();
 
 //helpers..
-function logResp(res){
-
+function logResponse(res){
+    console.log("responded");
+    
 }
 
 function logRequest(req){
-
+    console.log(req.query);
+    var id = req.query["id"];
+    if(id)
+        console.log("Id: " + id);
 }
 
 //Something
@@ -65,22 +75,19 @@ app.use(function (req, res, next) {
     next();
 });
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
-//Workspace
-
-app.get('/workspaces', function (req, res){
-
-});
+// parse application/json
+app.use(bodyParser.json())
 
 
 //Snippet
 //GET id
 app.get('/snippets', function (req, res){
 
-    console.log(req.baseUrl);
+    logRequest(req);
     var id = req.query["id"];
-    console.log("requested id: " + id);
-
     db.each("SELECT id, title, content FROM Snippets WHERE id = ?",
         id,
         function(err, row) {
@@ -99,14 +106,47 @@ app.get('/snippets', function (req, res){
             }
         });
 });
-
+//POST
 app.post('/snippets', function(req, res){
-    console.log(req.query);
+    
     var title = req.query.title;
     var content = req.query.content;
 
     var stmt = db.prepare("INSERT INTO Snippets (title, content) VALUES(?,?)");
     stmt.run(title, content);
+    stmt.finalize();
+
+    res.status(202);
+});
+
+//Workspace
+app.get('/workspaces', function (req, res){
+    logRequest(req);
+    var resultData = [];
+    var rowIndex = 0;
+    db.each("SELECT id, content FROM Workspaces", function(err, row){
+        if(err){
+            console.log(err);
+        }else if(row){
+            console.log(row);
+            var newObj = {
+                id: row.id,
+                content : row.content
+            };
+            resultData.push(newObj);
+        }
+    });
+    res.json(resultData);
+    logResponse(res);
+});
+
+app.post('/workspaces', function (req, res){
+    logRequest(req);
+    console.log("-- " + req.body);
+    var content = req.query.items;
+
+    var stmt = db.prepare("INSERT INTO Workspaces (content) VALUES(?)");
+    stmt.run(content);
     stmt.finalize();
 
     res.status(202);
