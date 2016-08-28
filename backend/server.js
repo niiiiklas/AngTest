@@ -8,7 +8,38 @@ var util = require('./app/util.js');
 var dbuser = require('./app/dbUsers.js');
 
 
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
+
+var myConfigs = {
+    recreateDBOnStart: true,
+    addTestData : true,
+    logContentOnStart : true
+};
+
 var dbfile = "test.db";
+if(myConfigs.recreateDBOnStart){
+    fs.unlink(dbfile);
+}
+
+
 var exists = fs.existsSync(dbfile);
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(dbfile);
@@ -16,9 +47,52 @@ var db = new sqlite3.Database(dbfile);
 
 //init db if needed
 if(!exists){
+    console.log("Init db");
     dbuser.initdb(db);
+
+    if(myConfigs.addTestData){
+        console.log("Conf-adding test data")
+        dbuser.addtestdata(db);
+    }
+
+    if(myConfigs.logContentOnStart){
+        console.log("Conf-log data");
+        dbuser.logall(db);
+    }
 }
 
-console.log("Hello!");
+app.get('/users', function(req,res){
+    dbuser.selectAll(db, function(r){
+        //console.log(r);
+        res.json(r);
+    })
+});
+
+app.get('/users/:id', function(req, res){
+    dbuser.selectid(db, req.params["id"], function(r){
+        res.json(r);
+    })
+});
+
+app.post('/users', function(req,res){
+    var data = {
+        name : req.query["name"],
+        secret : req.query["secret"]
+    };
+    dbuser.insert(db, data.name, data.secret, function(r){
+        console.log(r);
+        res.status(200).send("OK");
+    });
+})
 
 
+
+
+//Start listening
+var server = app.listen(8081, function () {
+
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log("Example app listening at http://%s:%s", host, port)
+})

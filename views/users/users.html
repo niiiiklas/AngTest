@@ -1,0 +1,25 @@
+<div ng-controller="usersCtrl">
+    
+    <div class="row">
+        <div class="col-md-2">
+            <input type="button" class="btn btn-success" value="Add user" ng-click="addNewUser();">
+        </div>
+        <div class="col-md-4">
+            Name
+            <input type="text" class="formcontrol" ng-model="newusername">
+        </div>
+        <div class="col-md-4">
+            Secret
+            <input type="text" class="formcontrol" ng-model="newusersecret">
+        </div>
+    </div>
+    <div class="row">
+        --
+    </div>
+    <div class="row" ng-repeat="user in userlist">
+        <div class="col-md-1">{{user.id}}</div>
+        <div class="col-md-4"> {{user.name}}</div>
+    </div>
+
+    {{res}}
+</div>

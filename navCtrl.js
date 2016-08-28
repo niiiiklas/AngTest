@@ -18,6 +18,11 @@ function($scope, $interval){
             title : "History",
             ref : "/views/history/history.html",
             active : false
+        },
+        {
+            title : "Users",
+            ref : "/views/users/users.html",
+            active : false
         }
     ]
 
@@ -39,6 +44,6 @@ function($scope, $interval){
 
 
     //Debug start in snippets:
-    $scope.OnNavItemClick($scope.navoptions[1]);
+    $scope.OnNavItemClick($scope.navoptions[3]);
 }]);
     
