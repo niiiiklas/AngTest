@@ -56,9 +56,9 @@ exports.insert = function(db, name, secret, callback){
     })
 }
 
-exports.update = function(db, name, secret, callback){
-    var q = "UPDATE Users (name, secret) VALUES(?,?)";
-    db.run(q, [name,secret], function(err){
+exports.update = function(db, id, name, secret, callback){
+    var q = "UPDATE Users (name, secret) VALUES(?,?) WHERE id=?";
+    db.run(q, [name,secret,id], function(err){
         if(err){
             console.log(err);
             callback(0);

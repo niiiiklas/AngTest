@@ -6,6 +6,8 @@ var fs = require("fs");
 //My requires
 var util = require('./app/util.js');
 var dbuser = require('./app/dbUsers.js');
+var dbdir = require('./app/dbDir.js');
+var dbsnipp = require('./app/dbSnippet');
 
 
 app.use(function (req, res, next) {
@@ -27,6 +29,8 @@ app.use(function (req, res, next) {
     next();
 });
 
+//parse body as json
+app.use(bodyParser.json());
 
 var myConfigs = {
     recreateDBOnStart: true,
@@ -48,17 +52,26 @@ var db = new sqlite3.Database(dbfile);
 //init db if needed
 if(!exists){
     console.log("Init db");
+
     dbuser.initdb(db);
+    dbdir.initdb(db);
+    dbsnipp.initdb(db);
 
     if(myConfigs.addTestData){
         console.log("Conf-adding test data")
         dbuser.addtestdata(db);
+        dbdir.addtestdata(db);
+        dbsnipp.addtestdata(db);
     }
 
     if(myConfigs.logContentOnStart){
         console.log("Conf-log data");
         dbuser.logall(db);
+        dbdir.logall(db);
+        dbsnipp.logall(db);
     }
+    
+
 }
 
 app.get('/users', function(req,res){
@@ -86,7 +99,56 @@ app.post('/users', function(req,res){
 })
 
 
+app.get('/directories/:', function(req,res){
+    var userid = req.query.userid;
+    var diritemid = req.query.diritemid;
+    console.log("Directories GET");
+    if(userid != undefined){
+        console.log("Get directories by userid: " + userid);
+        dbdir.selectRootsForUser(db, userid, function(r){
+            res.json(r);
+        });
+    }
+    else if(diritemid != undefined)
+    {
+        console.log("Get directories supitems: " + diritemid);
+        dbdir.selectChildrenOfId(db, diritemid, function(r){
+            res.json(r);
+        });
+    }
+});
 
+app.post('/directories', function(req,res){
+    var userid = req.query.userid;
+});
+
+
+app.get('/snippets/:', function(req, res){
+    var id = req.query.id;
+    if(id != undefined){
+        dbsnipp.selectid(db, id, function(r){
+            res.json(r);
+        });
+    }
+})
+
+app.post('/snippets/:', function(req, res){
+    var id = req.query.id;
+    if(id == undefined || id == -1)
+    {
+        console.log(req.body);
+        dbsnipp.insert(db, req.body, function(r){
+            res.json(r); //Created id
+        })
+    }
+    else if(id)
+    {
+        dbsnipp.updateContent(db, id, updatedContent, function(r){
+            res.json(r);
+        })
+    }
+    
+})
 
 //Start listening
 var server = app.listen(8081, function () {

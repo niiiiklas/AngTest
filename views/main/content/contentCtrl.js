@@ -1,38 +1,33 @@
-app.controller('contentCtrl', ['$scope', '$interval',
-function($scope, $interval){
+app.controller('contentCtrl', ['$scope', '$interval', '$http',
+function($scope, $interval, $http){
 
-    $scope.datasource = [
-        {
-            key: 0,
-            content : "niklas första fildata.."
-        },
-        {
-            key: 1,
-            content : "<html>"
-        },
-        {
-            key: 2,
-            content : "vad är detta då??"
-        },
-        {
-            key: 3,
-            content : "ds"
-        },
-        {
-            key: 4,
-            content : "kdkdkdkd"
-        },
-        {
-            key: 5,
-            content : "dsdsdsk k kdkdkkd dkdk dkkdd"
-        },
-        {
-            key: 6,
-            content : "jjfjfiieiei"
-        },
-    ]
+    var urlBase = 'http://127.0.0.1:8081/';
+    $scope.displaycontent = null
 
-    $scope.displaycontent = $scope.datasource[0];
+    var loadContentWithKey = function(key){
+        if(key.contentref == null || key.contentref == undefined){ //CREATE
+            $http({
+            method: 'POST',
+            url: urlBase + 'snippets/:',
+            params : { 
+                id:-1
+            },
+            data : {
+                content : "Empty",
+                tags : "new",
+                contentType : "text"
+                }
+        }).then(function successCallback(response){
+            $scope.testdebug = response.data;
+            $scope.displaycontent = response.data;
+        }, function errorCallback(response){
+            $scope.testdebug = response;
+        });
+        } //Fetch
+        else{
+
+        }
+    }
 
     $scope.displayContentKey = function(key){
         
@@ -44,9 +39,11 @@ function($scope, $interval){
     }
 
     $scope.$on("showfile", function(event, data){
-        var key = parseInt(data[0]);
-        console.log("showing what: " + key);
-        $scope.displayContentKey(key);
+        var dirItem = data[0];
+        console.log("Showing what item: ")
+        console.log(dirItem);
+        loadContentWithKey(dirItem);
+        //$scope.displayContentKey(key);
     });
 
     $scope.isInEditmode = false;

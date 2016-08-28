@@ -44,6 +44,6 @@ function($scope, $interval){
 
 
     //Debug start in snippets:
-    $scope.OnNavItemClick($scope.navoptions[3]);
+    $scope.OnNavItemClick($scope.navoptions[1]);
 }]);
     

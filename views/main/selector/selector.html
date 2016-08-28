@@ -17,23 +17,28 @@
             ng-click="selectItem(item);">
             {{ item.title}}
         </span>
-        <span ng-if="item.icontype == 0">
+        <span ng-if="item.isopen">
             <input type="button" value="+" class="btn btn-success btn-xs" ng-click="addNewItem(item);" />
         </span>
         <ul ng-if="item.items" class="selectorlist">
-            <li ng-if="item.icontype == 0" 
+            <li ng-if="item.isopen" 
                 class="selectorilistitem glyphicon glyphicon-folder-open" 
                 ng-repeat="item in item.items" 
-                ng-include="'tempTest'"></li>
-            <li ng-if="item.icontype == 1"  
+                ng-include="'tempTest'"
+                ng-click="toggleItemOpen(item);"></li>
+            <li ng-if="!item.isopen"  
                 class="selectorilistitem glyphicon glyphicon-file" 
                 ng-repeat="item in item.items" 
-                ng-include="'tempTest'"></li>
+                ng-include="'tempTest'"
+                ng-click="toggleItemOpen(item);"></li>
         </ul>
     </script>
     <ul style="padding-left:0px">
         <li class="selectorilistitem glyphicon glyphicon-folder-open" 
             ng-repeat="item in items" 
-            ng-include="'tempTest'"></li>
+            ng-include="'tempTest'"
+            ng-click="toggleItemOpen(item);"></li>
     </ul>
+
+    {{testdebug}}
 </div>
