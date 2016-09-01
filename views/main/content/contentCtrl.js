@@ -7,25 +7,39 @@ function($scope, $interval, $http){
     var loadContentWithKey = function(key){
         if(key.contentref == null || key.contentref == undefined){ //CREATE
             $http({
-            method: 'POST',
-            url: urlBase + 'snippets/:',
-            params : { 
-                id:-1
-            },
-            data : {
-                content : "Empty",
-                tags : "new",
-                contentType : "text"
-                }
-        }).then(function successCallback(response){
-            $scope.testdebug = response.data;
-            $scope.displaycontent = response.data;
-        }, function errorCallback(response){
-            $scope.testdebug = response;
-        });
+                method: 'POST',
+                url: urlBase + 'snippets/:',
+                params : { 
+                    id:-1
+                },
+                data : {
+                    content : "Empty",
+                    tags : "new",
+                    contentType : "text"
+                    }
+            }).then(function successCallback(response){
+                $scope.testdebug = response.data;
+                $scope.displaycontent = response.data;
+                var emitWhat = [key, response.data.id];
+                $scope.$emit("filecontentloaded", emitWhat);
+            }, function errorCallback(response){
+                $scope.testdebug = response;
+            });
         } //Fetch
-        else{
-
+        else
+        {
+            $http({
+                method: 'GET',
+                url: urlBase + 'snippets/:',
+                params : { 
+                    id:key.contentref
+                }
+            }).then(function successCallback(response){
+                $scope.testdebug = response.data;
+                $scope.displaycontent = response.data;
+            }, function errorCallback(response){
+                $scope.testdebug = response;
+            });
         }
     }
 

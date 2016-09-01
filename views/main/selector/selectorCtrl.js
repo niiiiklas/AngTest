@@ -11,8 +11,9 @@ function($scope, $interval, $http){
             params : {userid:1}
         }).then(function successCallback(response){
             $scope.testdebug = response;
-            var loadedItem = parseResponseItem(response);
-            updateItemsWithItem(loadedItem);
+            var loadedItems = parseResponseItem(response);
+            for(var i = 0; i < loadedItems.length; i++)
+                    updateItemsWithItem(loadedItems[i]);
         }, function errorCallback(response){
             $scope.userlist = response;
         });
@@ -25,9 +26,12 @@ function($scope, $interval, $http){
             params : {diritemid:itemId}
         }).then(function successCallback(response){
             $scope.testdebug = response;
-            var loadedItem = parseResponseItem(response);
-            if(loadedItem)
-                updateItemsWithItem(loadedItem);
+            var loadedItems = parseResponseItem(response);
+            if(loadedItems)
+            {
+                for(var i = 0; i < loadedItems.length; i++)
+                    updateItemsWithItem(loadedItems[i]);
+            }
         }, function errorCallback(response){
             $scope.testdebug = response;
         });
@@ -35,20 +39,24 @@ function($scope, $interval, $http){
     $scope.items = null;
 
     var parseResponseItem = function(response){
-        var respItem = response.data[0];
-        if(!respItem){
-            return;
+        var retItems = new Array();
+        for(var i = 0; i < response.data.length; i++){
+            var respItem = response.data[i];
+            if(!respItem){
+                return;
+            }
+            console.log(respItem);
+            retItems.push({
+                id : respItem.id,
+                title : respItem.title,
+                contentref : respItem.snippetId,
+                parentId : respItem.parentId,
+                icontype : 0,
+                isopen : false,
+                items : new Array()
+            });
         }
-        console.log(respItem);
-        return {
-            id : respItem.id,
-            title : respItem.title,
-            contentref : respItem.snippetId,
-            parentId : respItem.parentId,
-            icontype : 0,
-            isopen : false,
-            items : new Array()
-        };
+        return retItems;
     }
 
     var updateItemsWithItem = function(item){
@@ -85,10 +93,41 @@ function($scope, $interval, $http){
         }
     }
 
+    var findItemWithIdRecursive = function(item, id){
+        var tmpCorrect = null;
+        if(item.id == id)
+            return item;
+        else{
+            for(var i = 0; i < item.items.lengt; i++){
+                var res = findItemWithIdRecursive(item.items[i], id);
+                if(res != undefined)
+                    return res;
+            }
+            return undefined;
+        }
+        
+    }
+
+    var findItemWithId = function(id){
+        for(var i = 0; i < $scope.items.length; i++){
+            var res = findItemWithIdRecursive($scope.items[i], id);
+            if(res != undefined)
+                return res;
+        }
+        return undefined;
+    }
+
+    $scope.$on("newfilecreated", function(event, data){
+        console.log(data);
+        var itemId = data[0].id;
+        var itemInTree = findItemWithId(itemId);
+        itemInTree.contentref = data[1];
+    })
+
     $scope.selectItem = function(item){
         $scope.currentItem = item;
 
-        $scope.$emit("openfile", [$scope.currentItem])
+        $scope.$emit("openfile", $scope.currentItem)
     }
 
     $scope.toggleItemOpen = function(item){
