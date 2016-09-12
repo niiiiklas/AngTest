@@ -1,17 +1,17 @@
 
 exports.initdb = function(db){
     db.serialize(function(){
-        db.run("CREATE TABLE Directory (id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, title VARCHAR, tags VARCHAR, snippetId INTEGER, parentId INTEGER)");
+        db.run("CREATE TABLE Directory (id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, title VARCHAR, tags VARCHAR)");
     });
 }
 
 exports.addtestdata = function(db){
     db.serialize( function(){
-        var stmt = db.prepare("INSERT INTO Directory (userid, title, parentId) VALUES (?,?,?)");
-        stmt.run(1, "Root", null);
-        stmt.run(1, "Sub 1" , 1);
-        stmt.run(1, "Sub 2", 1);
-        stmt.run(1, "File 1", 2);
+        var stmt = db.prepare("INSERT INTO Directory (userid, title) VALUES (?,?)");
+        stmt.run(1, "Project 1");
+        stmt.run(1, "Notes quick");
+        stmt.run(1, "DSADS");
+        stmt.run(2, "For someone else");
 
         stmt.finalize();
     });
@@ -22,13 +22,13 @@ exports.logall = function(db){
         console.log(res);
     });
 
-    exports.selectRootsForUser(db, 1, function(res){
-        console.log("FROM USERID ROOTS: ");
+    exports.selectAllForUser(db, 1, function(res){
+        console.log("FROM USERID DIRECTORIES: ");
         console.log(res);
     })
 }
 
- var qAll = "id, userId, title, tags, snippetId, parentId";
+ var qAll = "id, userId, title, tags";
 
 exports.selectall = function(db, callback){
     var q = "SELECT " + qAll + " FROM Directory";
@@ -44,19 +44,10 @@ exports.selectbyid = function(db, id, callback){
     })
 }
 
-exports.selectRootsForUser = function(db, userid, callback){
-    var q = "SELECT " + qAll + " FROM Directory WHERE userId=? AND parentId IS NULL";
+exports.selectAllForUser = function(db, userid, callback){
+    var q = "SELECT " + qAll + " FROM Directory WHERE userId=?";
     db.all(q, userid, function(err, rows){
         console.log(rows);
-        if(err)
-            console.log(err);
-        callback(rows);
-    })
-}
-
-exports.selectChildrenOfId = function(db, id, callback){
-    var q = "SELECT " + qAll + " FROM Directory WHERE parentId=?";
-    db.all(q, id, function(err, rows){
         if(err)
             console.log(err);
         callback(rows);
@@ -77,13 +68,11 @@ exports.update = function(db, content, callback){
 }
 
 exports.insertwithSnippetId = function(db, content, callback){
-    var q = "INSERT INTO (userId, title, tags, snippetId, parentId) VALUES(?,?,?,?,?)";
+    var q = "INSERT INTO (userId, title, tags) VALUES(?,?,?)";
     db.run(q, [
             content.userId,
             content.title,
-            content.tags,
-            content.snippetId,
-            content.parentId
+            content.tags
             ],
         function(err, res){
         if(err)

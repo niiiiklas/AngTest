@@ -105,16 +105,11 @@ app.get('/directories/:', function(req,res){
     console.log("Directories GET");
     if(userid != undefined){
         console.log("Get directories by userid: " + userid);
-        dbdir.selectRootsForUser(db, userid, function(r){
+        dbdir.selectAllForUser(db, userid, function(r){
             res.json(r);
         });
-    }
-    else if(diritemid != undefined)
-    {
-        console.log("Get directories supitems: " + diritemid);
-        dbdir.selectChildrenOfId(db, diritemid, function(r){
-            res.json(r);
-        });
+    }else {
+        res.json({err:"Invalid userid or none..."});
     }
 });
 
@@ -126,9 +121,18 @@ app.post('/directories', function(req,res){
 app.get('/snippets/:', function(req, res){
     var id = req.query.id;
     if(id != undefined){
+        console.log("GET Snippet by id: " + directoryid);
         dbsnipp.selectid(db, id, function(r){
             res.json(r);
         });
+    }
+
+    var directoryid = req.query.directoryid;
+    if(directoryid != undefined){
+        console.log("GET Snippets for Directory: " + directoryid);
+        dbsnipp.selectForDirectoryListing(db, directoryid, function(r){
+            res.json(r);
+        })
     }
 })
 
