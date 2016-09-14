@@ -4,8 +4,8 @@ function($scope, $interval, $http){
     var urlBase = 'http://127.0.0.1:8081/';
     $scope.displaycontent = null
 
-    var loadContentWithKey = function(key){
-        if(key.contentref == null || key.contentref == undefined){ //CREATE
+    var loadContentWithKey = function(snippetid){
+        if (!snippetid){ //CREATE
             $http({
                 method: 'POST',
                 url: urlBase + 'snippets/:',
@@ -20,8 +20,8 @@ function($scope, $interval, $http){
             }).then(function successCallback(response){
                 $scope.testdebug = response.data;
                 $scope.displaycontent = response.data;
-                var emitWhat = [key, response.data.id];
-                $scope.$emit("filecontentloaded", emitWhat);
+                //var emitWhat = [key, response.data.id];
+                //$scope.$emit("filecontentloaded", emitWhat);
             }, function errorCallback(response){
                 $scope.testdebug = response;
             });
@@ -32,7 +32,7 @@ function($scope, $interval, $http){
                 method: 'GET',
                 url: urlBase + 'snippets/:',
                 params : { 
-                    id:key.contentref
+                    id:snippetid
                 }
             }).then(function successCallback(response){
                 $scope.testdebug = response.data;
@@ -53,10 +53,9 @@ function($scope, $interval, $http){
     }
 
     $scope.$on("showfile", function(event, data){
-        var dirItem = data[0];
-        console.log("Showing what item: ")
-        console.log(dirItem);
-        loadContentWithKey(dirItem);
+        var snippetid = data[0].id
+        console.log("Showing what item: " + snippetid)
+        loadContentWithKey(snippetid);
         //$scope.displayContentKey(key);
     });
 

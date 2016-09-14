@@ -2,22 +2,31 @@
     style="background-color:#cacaca; min-height:300px"
     ng-controller="selectorCtrl">
     <div class="row">
-        <div class="col-md-12">
-            SEARCH ----
+        <div class="col-md-11" style="margin:4px">
+            <input type="text" class="form-control" />
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-10">
-            <ul>
-                <li ng-repeat="dir in directories">
+        <div class="col-md-11">
+            <ul class="list-group">
+                <li ng-repeat="dir in directories" ng-class="dir.isSelectedStyle();" class="list-group-item list-group-item-action">
                     <div ng-click="ondirectoryclick(dir);">
-                        <span  ng-click="toggleDirectoryExpand(dir);" style="background-color: #aaaaaa">
-                            <span ng-show="dir.isExpanded"> - </span>
-                            <span ng-show="!dir.isExpanded"> + </span>
-                        </span> 
+                        <span ng-show="dir.isSelected" style="font-weight:bold">
                             {{ dir.id + ' - ' + dir.dirName }}
+                        </span>
+                        <span ng-show="!dir.isSelected">
+                            {{ dir.id + ' - ' + dir.dirName }}
+                        </span>
+
                     </div>
+                    <ul ng-if="dir.isExpanded" class="list-group">
+                        <li ng-repeat="sni in dir.snippets" class="list-group-item list-group-item-action">
+                            <div ng-click="onsnippetclick(sni);">
+                                {{ sni.id + ' : ' + sni.name }}
+                            </div>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
