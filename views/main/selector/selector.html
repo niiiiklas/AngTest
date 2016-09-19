@@ -27,6 +27,8 @@
                             </div>
                         </li>
                     </ul>
+
+                    <input ng-if="dir.isExpanded" type="button" class="btn" value="+" ng-click="createNewSnippetInDir(dir);" />
                 </li>
             </ul>
         </div>

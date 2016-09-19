@@ -33,6 +33,16 @@ function($scope, $interval, $http){
         }
     }
 
+    var findSnippet = function(id){
+        for(var i = 0; i < $scope.directories.length; i++){
+            for(var sn = 0; sn < $scope.directories[i].snippets.length; sn++){
+                if($scope.directories[i].snippets[sn].id == id)
+                    return $scope.directories[i].snippets[sn];
+            }
+        }
+        return null;
+    }
+
     $scope.ondirectoryclick = function(dir){
         for(var i = 0; i < $scope.directories.length; i++){
             $scope.directories[i].isSelected = false;
@@ -93,6 +103,47 @@ function($scope, $interval, $http){
             })
     };
 
+
+    $scope.createNewSnippetInDir = function(dir){
+        var toPost = {
+            directoryid : dir.id,
+            name : "<new>",
+            content : "",
+            tags : "new",
+            contentType : "unknown"
+        };
+
+        $http({
+            method: "POST",
+            url: urlBase + "snippets/:",
+            params : {userid:1},
+            data : toPost
+        }).then(
+            function successCallback(response){
+                console.log(response);
+                var snippet = {
+                        id: response.data.id,
+                        name: response.data.name,
+                        directoryid: response.data.directoryid,
+                        contenttype : response.data.contenttype,
+                        isSelected : false
+                    };
+                    dir.addIfNotExists(snippet);
+            }, function errorCallback(response){
+                console.log(response);
+            }
+        );
+    }
+
+    $scope.$on("filenamechangedbroadcast", function(event, data){
+        console.log("filenamechangedbroadcast in sel");
+        console.log(data);
+
+        var snippetToChangeName = findSnippet(data.id);
+        console.log(snippetToChangeName);
+        if(snippetToChangeName != null)
+            snippetToChangeName.name = data.name;
+    });
 
     getDirectories(1);
 }]);

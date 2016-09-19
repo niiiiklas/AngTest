@@ -11,4 +11,10 @@ function($scope, $interval){
         console.log("filecontentloaded", data);
         $scope.$broadcast("newfilecreated", data);
     });
+
+    $scope.$on("filenamechangedemit", function(event, data){
+        console.log("filenamechanged");
+        console.log(data);
+        $scope.$broadcast("filenamechangedbroadcast", data);
+    })
 }]);

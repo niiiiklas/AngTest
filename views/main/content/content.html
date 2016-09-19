@@ -6,19 +6,18 @@
             <label>Name</label>
         </div>
         <div class="col-md-9">
-            <input type="text" class="form-control" ng-model="displaycontent.key"></input>
+            <input type="text" class="form-control" ng-model="displaycontent.name" ng-change="onNameChanged();"></input>
         </div>
     </div>
     <div class="row" style="margin-left:0px; margin-right:0px">
         <input type="button" class="btn btn-success" value="Edit" style="float:right"
             ng-click="editbuttonclick(this)">
         
-        <div class="form-group">
-            <code ng-if="isInEditmode == false">
-                {{ displaycontent.content }}
-            </code>
-                
-            <textarea class="form-control" rows="10" type="text" ng-if="isInEditmode" ng-model="displaycontent.content" />
+        <div class="form-group" class="col-md-11">
+            <div hljs 
+                hljs-source="displaycontent.content"
+                hljs-language="html"
+                hljs-no-escape></div>
         </div>
     </div>
     {{ testdebug }}

@@ -4,6 +4,19 @@ function($scope, $interval, $http){
     var urlBase = 'http://127.0.0.1:8081/';
     $scope.displaycontent = null
 
+    var postUpdate = function(snippetid, data){
+        $http({
+            method: "POST",
+            url : urlBase + 'snippets/:',
+            params: { id: snippetid },
+            data: data
+        }).then(function successCallback(response){
+            console.log(response);
+        }, function errorCallback(response){
+            console.log(response);
+        });
+    }
+
     var loadContentWithKey = function(snippetid){
         if (!snippetid){ //CREATE
             $http({
@@ -36,7 +49,14 @@ function($scope, $interval, $http){
                 }
             }).then(function successCallback(response){
                 $scope.testdebug = response.data;
-                $scope.displaycontent = response.data;
+                $scope.displaycontent = {
+                    id : response.data.id,
+                    name : response.data.name,
+                    content : response.data.content,
+                    contentType : response.data.contentType,
+                    tags : response.data.tags    
+                };
+                response.data;
             }, function errorCallback(response){
                 $scope.testdebug = response;
             });
@@ -51,6 +71,19 @@ function($scope, $interval, $http){
             }
         }
     }
+
+    $scope.onNameChanged = function(){
+        postUpdate($scope.displaycontent.id, 
+        {
+            name : $scope.displaycontent.name
+        });
+        $scope.$emit("filenamechangedemit", {
+            id: $scope.displaycontent.id,
+            name: $scope.displaycontent.name
+        });
+    }
+
+
 
     $scope.$on("showfile", function(event, data){
         var snippetid = data[0].id

@@ -1,1 +1,1 @@
-var app = angular.module("AppMod", []); 
+var app = angular.module("AppMod", ['hljs']); 

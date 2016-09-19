@@ -147,9 +147,20 @@ app.post('/snippets/:', function(req, res){
     }
     else if(id)
     {
-        dbsnipp.updateContent(db, id, updatedContent, function(r){
-            res.json(r);
-        })
+        console.log("SNIPPETPOST UPDATE: ");
+        console.log(req.body);
+        var name = req.body.name;
+        var content = req.body.content;
+        
+        if(name){
+            dbsnipp.updateName(db, id, name, function(r){
+                res.json(r);
+            });
+        }else if(content){
+            dbsnipp.updateContent(db, id, content, function(r){
+                res.json(r);
+            });
+        }
     }
     
 })

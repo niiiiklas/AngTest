@@ -17,8 +17,23 @@ exports.addtestdata = function(db){
 
     exports.insert(db, {
         directoryid : 1,
-        name : "Projectnotes",
-        content : "Inte mycket att ha i julgran...",
+        name : "HTML Test",
+        content : "<html><body>dsads</body></html>",
+        tags : "",
+        contentType : "C#"
+    }, function() {});
+
+    exports.insert(db, {
+        directoryid : 1,
+        name : "HTML Test",
+        content : '<div class="row form-group">' + 
+            '<div class="col-md-3">' +
+            '    <label>Name</label>' +
+            '</div>'+
+            '<div class="col-md-9">'+
+            '    <input type="text" class="form-control" ng-model="displaycontent.name" ng-change="onNameChanged();"></input>'+
+            '</div>'+
+            '</div>',
         tags : "",
         contentType : "C#"
     }, function() {});
@@ -74,10 +89,35 @@ exports.insert = function(db, content, callback){
     })
 }
 
+
 exports.updateContent = function(db, id, contentString, callback){
-    var q = "UPDATE Snippets (content) VALUES(?) WHERE id=?";
+    var q = "UPDATE Snippets SET (content) VALUES(?) WHERE id=?";
     db.run(q, [contentString, id], function(err,res){
         if(err){console.log(err);}
         callback(db.lastInsertedRowId);
     })
+}
+
+exports.updateName = function(db, id, newName, callback){
+    var q = "UPDATE Snippets SET name = ? WHERE id=?";
+    db.run(q, [newName, id], function(err, res){
+        if(err){console.log(err);}
+        callback(db.lastInsertedRowId);
+    });
+}
+
+exports.updateContentType = function(db, id, newContentType, callback){
+    var q = "UPDATE Snippets SET (contentType) VALUES(?) WHERE id=?";
+    db.run(q, [newContentType, id], function(err, res){
+        if(err){console.log(err);}
+        callback(db.lastInsertedRowId);
+    });
+}
+
+exports.updateTags = function(db, id, allTags, callback){
+    var q = "UPDATE Snippets SET (tags) VALUES(?) WHERE id=?";
+    db.run(q, [allTags, id], function(err, res){
+        if(err){console.log(err);}
+        callback(db.lastInsertedRowId);
+    });
 }
